@@ -2,3 +2,4 @@ src/text.py
 *.jpg
 *.jpeg
 src/__pycache__
+zdroje.txt
