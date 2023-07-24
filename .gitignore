@@ -1,3 +1,4 @@
 src/text.py
 *.jpg
 *.jpeg
+src/__pycache__
