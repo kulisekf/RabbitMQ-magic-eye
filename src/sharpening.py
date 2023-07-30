@@ -24,19 +24,27 @@ def on_receive(ch, method, properties, body):
 
     sharpen_img = sharpen(body)
     #send a message with the direct strategy - image to second queue
+    channel2.basic_publish(exchange='', routing_key=os.getenv("RABBITMQ_QUEUE_2"), body=body) #testovací!!!!!!!
     channel2.basic_publish(exchange='', routing_key=os.getenv("RABBITMQ_QUEUE_2"), body=sharpen_img)
 
     print("Processing done")
     ch.basic_ack(delivery_tag = method.delivery_tag) #Process confirm message
 
 #function that sharp the photo
+def is_sharp(img):
+    # detects sharpness value -> 255 = sharp
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return (np.max(cv2.convertScaleAbs(cv2.Laplacian(gray, 3))))
+
+#function that sharp the photo
 def sharpen(img):
     # OpenCV load image from byte string
     nparr = np.frombuffer(img, np.uint8)
     im = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    
-    kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]) # filter definition
-    im = cv2.filter2D(im, -1, kernel) # apply filter on image
+
+    if is_sharp(im) <= 254: #detects sharpness value -> 255 = sharp
+        kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]) # filter definition
+        im = cv2.filter2D(im, -1, kernel) # apply filter on image
 
     img_str = cv2.imencode('.jpeg', im)[1].tobytes() #convert OpenCV image to byte string
     return img_str

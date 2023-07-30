@@ -10,5 +10,5 @@ def connect(username, password, IPaddr, port):
 #connect the specified channel
 def open_channel(connection, queue_name):
     channel = connection.channel()
-    channel.queue_declare(queue=queue_name)
+    channel.queue_declare(queue=queue_name, durable=True)
     return channel

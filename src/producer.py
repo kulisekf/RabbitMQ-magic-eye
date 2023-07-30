@@ -8,7 +8,8 @@ def main():
     connection = connect(os.getenv("RABBITMQ_USERNAME"), os.getenv("RABBITMQ_PASSWORD"), os.getenv("RABBITMQ_IP_ADDR"), os.getenv("RABBITMQ_PORT"))
     channel = open_channel(connection, os.getenv("RABBITMQ_QUEUE_1"))
 
-    for filename in os.listdir(os.getenv("RABBITMQ_ORIGIN")): #for every file in folder
+    #for filename in os.listdir(os.getenv("RABBITMQ_ORIGIN")): #for every file in folder
+    for filename in os.listdir(os.path.join(os.getcwd(), os.getenv("RABBITMQ_ORIGIN"))): #for every file in folder
         f = os.path.join(os.getenv("RABBITMQ_ORIGIN"), filename) 
         if os.path.isfile(f): # checking if it is a file
             with open(f, "rb") as image:
