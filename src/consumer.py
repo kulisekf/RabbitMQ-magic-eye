@@ -1,6 +1,5 @@
 from rabbitmq_connect import connect, open_channel
-import datetime
-import os
+import datetime, os
 from dotenv import load_dotenv, find_dotenv
 
 def main():

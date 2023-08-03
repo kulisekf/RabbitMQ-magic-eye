@@ -1,4 +1,4 @@
-import os
+import os, pika
 from rabbitmq_connect import connect, open_channel
 from dotenv import load_dotenv, find_dotenv
 
@@ -16,7 +16,9 @@ def main():
                 f = image.read()
                 b = bytearray(f)
                 #send a message with the direct strategy
-                channel.basic_publish(exchange='', routing_key=os.getenv("RABBITMQ_QUEUE_1"), body=b)
+                channel.basic_publish(exchange='', routing_key=os.getenv("RABBITMQ_QUEUE_1"), body=b, properties=pika.BasicProperties(
+                         delivery_mode = pika.spec.PERSISTENT_DELIVERY_MODE
+                      ))
 
     print("sending was successful")
     connection.close()
